@@ -18,7 +18,7 @@ using System.Media;
 
 /// <summary>
 /// Features:
-/// - Real-time display of called tickets (via Queue.txt)
+/// - Real-time display of called tickets (via CALLEDCLIENT.txt)
 /// - Automatic playback of audio announcements (via ClientCaller.exe)
 /// - Media management (intro video, sound effects)
 /// - Active monitoring of the CalledClient.txt file
