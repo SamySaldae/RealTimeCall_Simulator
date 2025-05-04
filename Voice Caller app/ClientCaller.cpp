@@ -5,7 +5,7 @@
 
 using namespace std;
 
-string NumberToText(int Number)
+string NumberToText(int Number) //Recursif function
 {
     if (Number == 0)
         return "";
@@ -87,11 +87,14 @@ string ajust_path(string local_path, bool double_slash)
     }
     return newpath;
 }
+
+//LANGUAGEpath is the path of LANGUAGE.txt 
+string LANGUAGEpath= "C:/Users/khodi/OneDrive/Desktop/Projets/ticket call system/DB files/Voice Language.txt";
+
 string GetLanguage()
 {
     fstream LangFile;
-    string path = "C:/Users/khodi/OneDrive/Desktop/Projets/ticket call system/DB files/Voice Language.txt";
-    LangFile.open(path, ios::in);
+    LangFile.open(::LANGUAGEpath, ios::in);
     if (LangFile.is_open())
     {
         string Language;
@@ -138,23 +141,6 @@ void read_vector(vector<string> vect)
 #include <thread>
 #include <chrono>
 
-void MinimizeFoobarWindow() {
-    HWND hwnd = NULL;
-
-    // Attendre quelques instants que la fenêtre apparaisse
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    // Essayer de la trouver sur 3 secondes
-    for (int i = 0; i < 30; ++i) {
-        hwnd = FindWindowA("ninety  [foobar2000]", NULL); // recherche par **classe**
-        if (hwnd) {
-            cout << "Found" << endl;
-            ShowWindow(hwnd, SW_MINIMIZE);
-            return;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
-}
 
 void PlayAudio(const std::string& filePath) {
 
@@ -196,7 +182,6 @@ void VoiceReader(string TxTnumber)
     cout << base_path << endl;
     string temp_path = "C:\\Users\\khodi\\OneDrive\\Desktop\\Projets\\ticket call system\\DB files\\Audio File\\Audio numbers\\ENGLISH\\three.m4a";
     PlayAudio(base_path);
-    //PlayAudio();
 }
 void StartPlaying(int number)
 {
@@ -214,35 +199,23 @@ void StartPlaying(int number)
         iterator++;
     }
 }
-void StartPlaying(string Counter, int time_waiting)
+void StartPlaying(string Counter, int time_waiting) //Overloaded for calling string else than numbers 
 {
     VoiceReader(Counter);
     wait_(time_waiting);
 }
-bool MinimiserFenetreFoobar() {
-    HWND hWnd = FindWindowA(NULL, "foobar2000 v2.24.3"); // Remplace par le titre exact de ta fenêtre si besoin
 
-    if (hWnd == NULL) {
-        std::cerr << "Fenêtre Foobar2000 non trouvée.\n";
-        return false;
-    }
-
-    ShowWindow(hWnd, SW_MINIMIZE); // <- Minimiser au lieu de masquer
-    return true;
-}
 void ReadVoiceFromFile()
 {
-    string code = GetCalledClient();
-    vector<string> vCode = splitFunction(code, '/');
+    string code = GetCalledClient(); //Get the the client's ticket code from the file named CALLEDCLIENT.txt
+    vector<string> vCode = splitFunction(code, '/'); //Split into two parts exemple "A1" & "95"
     string txtCounter = vCode[0];
 
     StartPlaying("NowServing", 2500);
-    MinimiserFenetreFoobar();
     int num = stoi(vCode[1]);
-    StartPlaying(num);
-    StartPlaying("AtCounter", 2000);
-    StartPlaying(txtCounter, 1500);
-
+    StartPlaying(num);   //Call number 
+    StartPlaying("AtCounter", 2000); //Call "At counter" sound stored on file
+    StartPlaying(txtCounter, 1500); //Call to the counter needed
 }
 int main()
 {
