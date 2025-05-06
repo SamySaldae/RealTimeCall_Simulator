@@ -178,5 +178,47 @@ namespace ticket_call_system
         {
             initialise_CounterTab();
         }
+        enum enBackImage { Image,none};
+        void ChangeBackImage(Button btn,enBackImage Back)
+        {
+            if (Back == enBackImage.Image)
+                btn.BackgroundImage = Properties.Resources.liquid_marbling_paint_texture_background_fluid_painting_abstract_texture_intensive_color_mix_wallpaper;
+            else
+                btn.BackgroundImage = null;
+        }
+        private void button1_MouseEnter(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            ChangeBackImage(btn,enBackImage.none);
+        }
+
+        private void button1_MouseLeave(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            ChangeBackImage(btn, enBackImage.Image);
+        }
+
+       
+
+        private void ClickParametersButton_Click(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if(btn != null)
+            {
+                if (btn.Tag.ToString() == "Message")
+                {
+                    Form MessageForm = new MESSAGE_TRANSMISSION_FORM();
+                    MessageForm.ShowDialog();
+                }
+                else if(btn.Tag.ToString() =="Done")
+                {
+
+                }
+                else if(btn.Tag.ToString() =="Load")
+                {
+
+                }
+            }
+        }
     }
 }
