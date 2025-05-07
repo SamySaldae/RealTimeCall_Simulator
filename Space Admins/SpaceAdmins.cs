@@ -45,7 +45,7 @@ namespace ticket_call_system
 
        
         List<string> ltQUEUE;
-
+        int WaitingClients;
         private void GetListFromFile()
         {
             ltQUEUE = File.ReadAllLines(QUEUEpath).ToList();
@@ -177,6 +177,8 @@ namespace ticket_call_system
         private void SpaceAdmins_Load(object sender, EventArgs e)
         {
             initialise_CounterTab();
+            Gen = new GenericFunctionsLiberary();
+            
         }
         enum enBackImage { Image,none};
         void ChangeBackImage(Button btn,enBackImage Back)
@@ -198,8 +200,23 @@ namespace ticket_call_system
             ChangeBackImage(btn, enBackImage.Image);
         }
 
-       
-
+        string DIFFUSEVIDEOpath = "C:\\Users\\khodi\\OneDrive\\Desktop\\Projets\\ticket call system\\DB files\\Videos\\Intro.mp4";
+        string Language = "ENGLISH";
+        string Tone = "Tone 1";
+        string Str_Frequency_Value = "1000";
+        GenericFunctionsLiberary Gen;
+        private void LoadingVideoPath()
+        {
+            FilaDialogLoad.InitialDirectory = @"C:\Users\khodi\OneDrive\";
+            FilaDialogLoad.Title = "Loading a new video ";
+            FilaDialogLoad.DefaultExt = "avi"; //|mp4|mov
+            FilaDialogLoad.Filter = "avi files (*.avi)|*.avi|Mp4 files (*.mp4)|*.mp4|Movies files (*.mov)|*.mov";
+            if(FilaDialogLoad.ShowDialog()==DialogResult.OK)
+            {
+                DIFFUSEVIDEOpath=FilaDialogLoad.FileName;
+            }
+        }
+        Form MessageForm = new MESSAGE_TRANSMISSION_FORM();
         private void ClickParametersButton_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
@@ -207,17 +224,58 @@ namespace ticket_call_system
             {
                 if (btn.Tag.ToString() == "Message")
                 {
-                    Form MessageForm = new MESSAGE_TRANSMISSION_FORM();
                     MessageForm.ShowDialog();
                 }
                 else if(btn.Tag.ToString() =="Done")
                 {
+                    //string Code = "d";
+                    string Code = Gen.GenerateSetingsCode(Str_Frequency_Value, Language, Tone, DIFFUSEVIDEOpath, '/');
+                    Gen.SendToSettingFile(Code);
+                    //Send to PIVOTDATA
 
                 }
                 else if(btn.Tag.ToString() =="Load")
                 {
-
+                    LoadingVideoPath();
                 }
+            }
+        }
+
+        private void trk_PollingFrequency_Scroll(object sender, EventArgs e)
+        {
+            lbl_FrequencyValue.Text=trk_PollingFrequency.Value.ToString();
+            TrackBar Trk = sender as TrackBar;
+            Str_Frequency_Value = lbl_FrequencyValue.Text;
+           // MessageBox.Show(Str_Frequency_Value);
+        }
+
+        private void chk_AutoMatic_CheckedChanged(object sender, EventArgs e)
+        {
+            trk_PollingFrequency.Enabled = !chk_AutoMatic.Checked;
+            if (chk_AutoMatic.Checked)
+            {
+                if(ltQUEUE!=null)
+                { 
+                    WaitingClients = ltQUEUE.Count;
+                    Str_Frequency_Value = Gen.AutomaticPolling(WaitingClients).ToString();
+                }   
+                else
+                { 
+                     Str_Frequency_Value = "1000";
+                    MessageBox.Show("The Queue is empty right now .\n It will be functional after first (swipe next) actioned by admin \n Actual frequency = 1 (second)");
+                }
+            }
+            else
+                Str_Frequency_Value = trk_PollingFrequency.Value.ToString();
+        }
+
+        private void cmb_Language_TextUpdate(object sender, EventArgs e)
+        {
+            ComboBox cmb = sender as ComboBox;
+            switch(cmb.Tag.ToString())
+            {
+                case "Language":Language=Gen.GetComboxBoxValue(cmb); break;
+                case "Tone":Tone=Gen.GetComboxBoxValue(cmb);break;
             }
         }
     }
