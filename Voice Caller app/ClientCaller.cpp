@@ -208,10 +208,18 @@ void StartPlaying(string Counter, int time_waiting) //Overloaded for calling str
     VoiceReader(Counter);
     wait_(time_waiting);
 }
-
-void ReadVoiceFromFile()
+void WriteRecepetionMessage()
 {
-    string code = GetCalledClient(); //Get the the client's ticket code from the file named CALLEDCLIENT.txt
+    fstream File;
+    File.open(PIVOTDATApath, ios::out);
+    if (File.is_open())
+    {
+        File << "RECEVED";
+        File.close();
+    }
+}
+void ReadVoiceFunction(string code)
+{
     vector<string> vCode = splitFunction(code, '/'); //Split into two parts exemple "A1" & "95"
     string txtCounter = vCode[0];
 
@@ -221,8 +229,16 @@ void ReadVoiceFromFile()
     StartPlaying("AtCounter", 2000); //Call "At counter" sound stored on file
     StartPlaying(txtCounter, 1500); //Call to the counter needed
 }
+void ReadVoiceFromFile()
+{
+    string code = GetCalledClient(); //Get the the client's ticket code from the file named CALLEDCLIENT.txt
+    if (code != "RECEVED")
+        ReadVoiceFunction(code);
+    
+}
 int main()
 {
     ReadVoiceFromFile();
+    WriteRecepetionMessage();
     return 0;
 }
