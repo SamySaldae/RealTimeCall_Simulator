@@ -153,10 +153,12 @@ void wait_(int miliseconds)
 {
     Sleep(miliseconds);
 }
+const string PIVOTDATApath = "C:/Users/khodi/OneDrive/Desktop/Projets/ticket call system/DB files/PIVOTDATA.txt";
 string GetCalledClient()
 {
     fstream File;
-    string path = ("C:/Users/khodi/OneDrive/Desktop/Projets/ticket call system/DB files/Called Client.txt");
+    string path = PIVOTDATApath;
+    vector<string> vCode;
     path = ajust_path(path);
     File.open(path, ios::in);
     if (File.is_open())
@@ -165,11 +167,13 @@ string GetCalledClient()
         while (getline(File, line))
         {
             if (line != "")
-                return line;
+            {
+                vCode.push_back(line);
+            }
         }
         File.close();
     }
-    return "";
+    return vCode[1];
 }
 void VoiceReader(string TxTnumber)
 {
