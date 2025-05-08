@@ -30,25 +30,16 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.WMP1 = new AxWMPLib.AxWindowsMediaPlayer();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lbNumber = new System.Windows.Forms.Label();
             this.pbCounter = new System.Windows.Forms.PictureBox();
             this.pcSubTitle = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.WMP1)).BeginInit();
+            this.WMP1 = new AxWMPLib.AxWindowsMediaPlayer();
             ((System.ComponentModel.ISupportInitialize)(this.pbCounter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcSubTitle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WMP1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // WMP1
-            // 
-            this.WMP1.Enabled = true;
-            this.WMP1.Location = new System.Drawing.Point(29, 33);
-            this.WMP1.Name = "WMP1";
-            this.WMP1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("WMP1.OcxState")));
-            this.WMP1.Size = new System.Drawing.Size(671, 295);
-            this.WMP1.TabIndex = 0;
             // 
             // label1
             // 
@@ -83,6 +74,7 @@
             this.lbNumber.Size = new System.Drawing.Size(140, 81);
             this.lbNumber.TabIndex = 5;
             this.lbNumber.Text = "200";
+            this.lbNumber.Click += new System.EventHandler(this.lbNumber_Click);
             // 
             // pbCounter
             // 
@@ -100,6 +92,15 @@
             this.pcSubTitle.TabIndex = 1;
             this.pcSubTitle.TabStop = false;
             // 
+            // WMP1
+            // 
+            this.WMP1.Enabled = true;
+            this.WMP1.Location = new System.Drawing.Point(29, 33);
+            this.WMP1.Name = "WMP1";
+            this.WMP1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("WMP1.OcxState")));
+            this.WMP1.Size = new System.Drawing.Size(671, 295);
+            this.WMP1.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -114,9 +115,9 @@
             this.Name = "Form1";
             this.Text = "Principale screen";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.WMP1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCounter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcSubTitle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WMP1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
