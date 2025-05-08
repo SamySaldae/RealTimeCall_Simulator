@@ -18,7 +18,7 @@ using System.Media;
 
 /// <summary>
 /// Features:
-/// - Real-time display of called tickets (via CALLEDCLIENT.txt)
+/// - Real-time display of called tickets (via Queue.txt)
 /// - Automatic playback of audio announcements (via ClientCaller.exe)
 /// - Media management (intro video, sound effects)
 /// - Active monitoring of the CalledClient.txt file
@@ -51,15 +51,20 @@ namespace ticket_call_system
         const string COUNTERPICSpath = "C:\\Users\\khodi\\OneDrive\\Desktop\\Projets\\ticket call system\\DB files\\Pics\\";
         const string VOICECALLERpath = "C:\\Users\\khodi\\OneDrive\\Desktop\\Projets\\ticket call system\\DB files\\Audio File\\ClientCaller\\x64\\Release\\ClientCaller.exe";
         const string SOUNDpath = @"C:\Users\khodi\OneDrive\Desktop\Projets\ticket call system\DB files\Audio File\Sound effets\Next sound effect 1.wav";
-
+        const string PIVOTDATApath = "C:\\Users\\khodi\\OneDrive\\Desktop\\Projets\\ticket call system\\DB files\\PIVOTDATA.txt";
+        const string SETTINGSpath = "C:\\Users\\khodi\\OneDrive\\Desktop\\Projets\\ticket call system\\DB files\\Settings.txt";
         private void ChargeListFromFile()
         {
-            ltCalledCient = File.ReadAllLines(CALLEDCLIENTpath).ToList();
+            ltCalledCient = File.ReadAllLines(PIVOTDATApath).ToList();
         }
         string precedent_code = "";
         string Counter;
         string strNumber;
-        
+        int PollingFrequency = 1000;
+        string Language = "ENGLISH";
+        string Tone = "Tone 1";
+        string VIDEO_DIFFUSIONpath = @"C:\Users\khodi\OneDrive\Desktop\Projets\ticket call system\DB files\Videos\Intro.mp4";
+        bool IS_ReadingVoice = false;
         void prepare_code(string lcoal_code)
         {
            
@@ -88,20 +93,61 @@ namespace ticket_call_system
             await Task.Delay(2000);
             Process.Start(VOICECALLERpath);
         }
+        private void SendReceved()
+        {
+           File.WriteAllText(PIVOTDATApath, "RECEVED");
+        }
+        private List<string>  GetUpdatedParametersByList(string DataSentToForm)
+        {
+            List<string> LocalList = new List<string>();
+            LocalList = DataSentToForm.Split('/').ToList();
+            return LocalList;
+        }
+        private void SetNewParameters(List<string> list)
+        {
+            PollingFrequency = int.Parse(list[0]);
+            Language = list[1];
+            Tone = list[2];
+            VIDEO_DIFFUSIONpath = list[3];
+            PlayVideo();
+        }
+        private void CALLCLIENT()
+        {
+            prepare_code(ltCalledCient[1]);
+            PrintOnScreen(strNumber, Counter);
+            VoiceCall();
+            //SendReceved();
+        }
+        private void CALL_SETTING_FUNCTION()
+        {
+            List<string> ltStrings = new List<string>();
+            string Code_Setings = File.ReadAllText(SETTINGSpath);
+            ltStrings = GetUpdatedParametersByList(Code_Setings);
+            SetNewParameters(ltStrings);
+            SendReceved();
+        }
+
         private void check()     //Check if a new client has been added on file
         {
-            if (ltCalledCient[0] != precedent_code)
+            if (ltCalledCient[0] != "RECEVED" && !IS_ReadingVoice)
             {
-                precedent_code = ltCalledCient[0];
-                prepare_code(precedent_code);
-                PrintOnScreen(strNumber,Counter);
-                VoiceCall();
+                switch (ltCalledCient[0])
+                {
+
+                    case "CALLEDCLIENT": CALLCLIENT(); IS_ReadingVoice = true; break;
+                    case "MESSAGE": break;
+                    case "VOICE_MESSAGE": break;
+                    case "SETTINGS": CALL_SETTING_FUNCTION(); break;
+                }
             }
+            else if (ltCalledCient[0] == "RECEVED") //When ClientCaller finishes reading voice it will right "RECEVED" on the file whish 
+                IS_ReadingVoice = false;                            //means that it already has fished rading the message by audio 
+
         }
         private void PlayVideo()
         {
-            string videoPath = @"C:\Users\khodi\OneDrive\Desktop\Projets\ticket call system\DB files\Videos\Intro.mp4";
-            WMP1.URL = videoPath; // Load the vidéo
+            //This path is the path of the base video wich be diffused in the diffusion
+            WMP1.URL = VIDEO_DIFFUSIONpath; // Load the vidéo
             WMP1.settings.setMode("loop", true); // Activate loop mode for video
             WMP1.settings.autoStart = true; // Start playing video automaticly
         }
@@ -115,9 +161,10 @@ namespace ticket_call_system
             {
                 ChargeListFromFile();
                 check();
-                await WaitOneSecondAsync(1000);
+                await WaitOneSecondAsync(PollingFrequency);
             }
         }
+        GenericFunctionsLiberary Gen;
         private void Form1_Load(object sender, EventArgs e) //Start of diffusion
         {
             PictureBox pictureBox = new PictureBox();
@@ -131,12 +178,17 @@ namespace ticket_call_system
             {
                 MessageBox.Show("Diffusion END");
             }
-
+            Gen = new GenericFunctionsLiberary();
         }
         bool stopLoop = false;
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             stopLoop = true;
+        }
+
+        private void lbNumber_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
