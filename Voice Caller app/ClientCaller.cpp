@@ -7,55 +7,10 @@ using namespace std;
 
 string NumberToText(int Number) //Recursif function
 {
-    if (Number == 0)
-        return "";
-    if (Number > 0 && Number < 20)
-    {
-        string Tab[] = { "","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve",
-        "thirteen" ,"fourteen","fiveteen","seventeen","eighteen","nineteen" };
-        return Tab[Number] + " ";
-    }
-    if (Number >= 19 && Number < 100)
-    {
-        string Tab[] = { "","","twenty","thirty","fourty","fivety","sixty","seventy","eighty","ninety" };
-        return Tab[Number / 10] + " " + NumberToText(Number % 10);
-    }
-    if (Number > 99 && Number < 200)
-    {
-        return "One hundred " + NumberToText(Number % 100);
-    }
-    if (Number > 199 && Number < 1000)
-    {
-        return NumberToText(Number / 100) + " hundreds " + NumberToText(Number % 100);
-    }
-    if (Number > 999 && Number < 2000)
-    {
-        return "one thousand " + NumberToText(Number % 10000);
-    }
-    if (Number > 1999 && Number < 10000)
-    {
-        return NumberToText(Number / 1000) + " thousands " + NumberToText(Number % 1000);
-    }
-    if (Number > 9999 && Number < 1000000)
-    {
-        return NumberToText(Number / 1000) + " thousands " + NumberToText(Number % 1000);
-    }
-    if (Number > 999999 && Number < 2000000)
-    {
-        return "One million " + NumberToText(Number % 1000000);
-    }
-    if (Number > 1999999 && Number < 1000000000)
-    {
-        return NumberToText(Number / 1000000) + " millions " + NumberToText(Number % 1000000);
-    }
-    if (Number >= 1000000000 && Number < 2000000000)
-    {
-        return "One billion " + NumberToText(Number % 1000000000);
-    }
-    if (Number >= 2000000000 && Number < 1000000000000)
-    {
-        return NumberToText(Number / 1000000000) + " billions " + NumberToText(Number % 1000000000);
-    }
+   // ===== FUNCTION HIDDEN FOR PRIVACY REASONS =====
+// [Number↔Text Conversion Algorithms - Original version in previous commits]
+string NumberToText (int Number) {
+return "[FUNCTION HIDDEN - Contact the author for access]";
 }
 int GetNumber(string message)
 {
